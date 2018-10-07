@@ -48,8 +48,8 @@ public class Person {
     @Override
     public String toString() {
         return "Person@" + hashCode() + ": {"
-            + "firstName='" + firstName + "', "
-            + "lastName='" + lastName + "', "
-            + "age=" + age + "}";
+           + "firstName='" + firstName + "', "
+           + "lastName='" + lastName + "', "
+           + "age=" + age + "}";
     }
 }
