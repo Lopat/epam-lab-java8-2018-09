@@ -24,16 +24,13 @@ public class Exercise1 {
         // функция извлечения информации о человеке из объекта сотрудника personExtractor: Employee -> Person
         Function<Employee, Person> employeeToPersonFunc = Employee::getPerson;
         // функция извлечения полного имени из информации о человеке fullNameExtractor: Person -> String
-        Function<Person, String> pesonToFullName = person -> person.getFirstName() + " " + person.getLastName();
+        Function<Person, String> personToFullName = Person::getFullName;
         // функция извлечения длины из строки stringLengthExtractor: String -> Integer
         Function<String, Integer> fullNameToLength = String::length;
         // функция извлечения длины полного имени из сотрудника fullNameLengthExtractor: Employee -> Integer
 
-        Function<Employee, Integer> fullNameLengthExtractor = employee ->
-                fullNameToLength.apply(pesonToFullName.apply(employeeToPersonFunc.apply(employee)));
-
-        Function<Employee, Integer> fullNameLengthExtractor2 = employee ->
-                employeeToPersonFunc.andThen(pesonToFullName.andThen(fullNameToLength)).apply(employee);
+        Function<Employee, Integer> fullNameLengthExtractor2 =
+                employeeToPersonFunc.andThen(personToFullName.andThen(fullNameToLength));
         //  преобразование списка employees в lengths используя fullNameLengthExtractor
 
         employees.forEach(employee ->  lengths.add(fullNameLengthExtractor2.apply(employee)));
