@@ -10,9 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static java.lang.System.lineSeparator;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,10 +22,9 @@ class Exercise1 {
     @Test
     void vanillaFutureExample() throws Exception {
         test(() -> {
-            Employee result = null;
-
-            // TODO использовать Executors.newFixedThreadPool(4), Future<T> и метод getEmployee: Person -> Employee
-
+            Employee result = Executors.newFixedThreadPool(4)
+                                       .submit(() -> getEmployee(getPerson("Дмитрий", "Сашков")))
+                                       .get();
             return result;
         });
     }
@@ -35,10 +32,8 @@ class Exercise1 {
     @Test
     void completableFutureExample() throws Exception {
         test(() -> {
-            Employee result = null;
-
-            // TODO использовать CompletableFuture<T> и метод getEmployeeInFuture: Person -> CompletableFuture<Employee>
-
+            Employee result = getEmployeeInFuture(getPerson("Дмитрий", "Сашков"))
+                             .get();
             return result;
         });
     }
@@ -48,7 +43,7 @@ class Exercise1 {
 
         Employee result = performWithCustomSystemIn(task, input);
 
-        assertThat(result, is(new Employee(new Person("Дмитрий", "Сашков", 24), Collections.emptyList())));
+        assertThat(result, is(new Employee(new Person("Дмитрий", "Сашков", 25), Collections.emptyList())));
     }
 
     private static <T> T performWithCustomSystemIn(Callable<T> task, InputStream input) throws Exception {
@@ -89,6 +84,6 @@ class Exercise1 {
     private static CompletableFuture<Employee> getEmployeeInFuture(Person person) {
         Employee employee;
         TimeUnit.SECONDS.sleep(2);         // For example load from another service
-        throw new UnsupportedOperationException();
+        return CompletableFuture.completedFuture(new Employee(person, Collections.emptyList()));
     }
 }
