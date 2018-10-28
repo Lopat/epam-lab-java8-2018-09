@@ -55,6 +55,16 @@ class Exercise2 {
 
         T[] result = Arrays.copyOf(source, source.length);
 
+        for (int i = 0; i < log2(result.length) + 1; i++ ) {
+
+            int dist = pow(2, i);
+
+            for (int x = result.length - 1; x > dist - 1; x--) {
+
+                result[x] = operator.apply(result[x], result[x - dist]);
+
+            }
+        }
         return result;
     }
 
